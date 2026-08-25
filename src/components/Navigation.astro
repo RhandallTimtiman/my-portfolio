@@ -1,0 +1,227 @@
+---
+interface Link {
+  label: string;
+  href: string;
+}
+
+interface Props {
+  name: string;
+  specialty: string;
+  links: Link[];
+}
+
+const { name, specialty, links } = Astro.props;
+const monoLabel =
+  "font-mono text-[0.68rem] font-semibold uppercase tracking-[0.08em]";
+---
+
+<header
+  class="fixed inset-x-0 top-0 z-50 border-b border-black/15 bg-[#f2f1ed]/90 backdrop-blur-md transition-colors duration-300 dark:border-white/10 dark:bg-[#080808]/90 min-[901px]:h-auto motion-reduce:transition-none"
+  data-site-header
+>
+  <nav
+    class="mx-auto flex h-[72px] w-[min(calc(100%-1.25rem),1280px)] items-center justify-between sm:w-[min(calc(100%-2rem),1280px)]"
+    aria-label="Primary navigation"
+  >
+    <a
+      class="font-mono text-xs font-semibold tracking-[0.18em] no-underline outline-offset-4 focus-visible:outline-2"
+      href="#top"
+      aria-label="Back to top"
+    >
+      Rhandall Timtiman / 2026
+    </a>
+    <ul class="hidden list-none items-center gap-7 p-0 min-[901px]:flex">
+      {
+        links.map((link) => (
+          <li>
+            <a
+              class={`${monoLabel} relative py-3 text-[#666] no-underline outline-offset-4 transition-colors after:absolute after:inset-x-0 after:bottom-1 after:h-px after:origin-left after:scale-x-0 after:bg-current after:transition-transform hover:text-[#111] focus-visible:outline-2 aria-[current=page]:text-[#111] aria-[current=page]:after:scale-x-100 dark:text-[#9d9d9d] dark:hover:text-white dark:aria-[current=page]:text-white motion-reduce:transition-none motion-reduce:after:transition-none`}
+              href={link.href}
+              data-nav-link
+            >
+              {link.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+    <div class="flex items-center gap-2 sm:gap-4">
+      <button
+        class={`${monoLabel} flex min-h-11 cursor-pointer items-center gap-2 border-0 bg-transparent px-1 text-[#111] outline-offset-4 focus-visible:outline-2 dark:text-[#f5f5f5]`}
+        type="button"
+        aria-label="Switch to light mode"
+        aria-pressed="false"
+        data-theme-toggle
+      >
+        <span aria-hidden="true" data-theme-label>Light</span>
+        <span
+          class="relative size-[18px] overflow-hidden rounded-full border border-current"
+          aria-hidden="true"
+        >
+          <span
+            class="absolute inset-y-0.5 right-0.5 left-2 rounded-full bg-current transition-all duration-300 motion-reduce:transition-none"
+            data-theme-indicator></span>
+        </span>
+      </button>
+      <button
+        class={`${monoLabel} flex min-h-11 cursor-pointer items-center gap-2 border-0 bg-transparent px-1 text-[#111] outline-offset-4 focus-visible:outline-2 dark:text-[#f5f5f5] min-[901px]:hidden`}
+        type="button"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+        data-menu-toggle
+      >
+        <span data-menu-label>Menu</span>
+        <span class="relative block h-3 w-[18px]" aria-hidden="true">
+          <span
+            class="absolute top-1/2 block h-px w-full -translate-y-[3px] bg-current transition-transform duration-300 motion-reduce:transition-none"
+            data-menu-line="top"></span>
+          <span
+            class="absolute top-1/2 block h-px w-full translate-y-[3px] bg-current transition-transform duration-300 motion-reduce:transition-none"
+            data-menu-line="bottom"></span>
+        </span>
+      </button>
+    </div>
+  </nav>
+  <div
+    class="invisible absolute inset-x-0 top-[72px] bottom-0 flex -translate-y-4 flex-col justify-between overflow-y-auto bg-[#f2f1ed] p-4 pt-6 opacity-0 transition-[opacity,transform,visibility] duration-300 dark:bg-[#080808] min-[901px]:hidden motion-reduce:transform-none motion-reduce:transition-none"
+    id="mobile-menu"
+    aria-hidden="true"
+    data-mobile-menu
+    inert
+  >
+    <ul class="m-0 list-none p-0">
+      {
+        links.map((link, index) => (
+          <li>
+            <a
+              class="flex items-baseline gap-6 border-b border-black/15 py-5 text-[clamp(2rem,10vw,4rem)] tracking-[-0.05em] no-underline outline-offset-[-2px] focus-visible:outline-2 dark:border-white/15"
+              href={link.href}
+              data-mobile-link
+            >
+              <span class="font-mono text-[0.62rem] font-medium tracking-[0.08em] text-[#666]">
+                0{index + 1}
+              </span>
+              {link.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+    <p
+      class="font-mono text-[0.62rem] font-medium uppercase tracking-[0.08em] text-[#666]"
+    >
+      {name} · {specialty}
+    </p>
+  </div>
+</header>
+
+<script>
+  const header = document.querySelector<HTMLElement>("[data-site-header]");
+  const menuToggle = header?.querySelector<HTMLButtonElement>("[data-menu-toggle]");
+  const menu = header?.querySelector<HTMLElement>("[data-mobile-menu]");
+  const menuLabel = header?.querySelector<HTMLElement>("[data-menu-label]");
+  const topLine = header?.querySelector<HTMLElement>('[data-menu-line="top"]');
+  const bottomLine = header?.querySelector<HTMLElement>(
+    '[data-menu-line="bottom"]',
+  );
+  const themeToggle = header?.querySelector<HTMLButtonElement>(
+    "[data-theme-toggle]",
+  );
+  const themeLabel = header?.querySelector<HTMLElement>("[data-theme-label]");
+  const themeIndicator = header?.querySelector<HTMLElement>(
+    "[data-theme-indicator]",
+  );
+  let menuOpen = false;
+
+  const setMenuOpen = (open: boolean, restoreFocus = false) => {
+    if (!header || !menuToggle || !menu || !menuLabel || !topLine || !bottomLine)
+      return;
+
+    menuOpen = open;
+    header.classList.toggle("h-dvh", open);
+    menuToggle.setAttribute("aria-expanded", String(open));
+    menuLabel.textContent = open ? "Close" : "Menu";
+    menu.setAttribute("aria-hidden", String(!open));
+    menu.inert = !open;
+    menu.classList.toggle("visible", open);
+    menu.classList.toggle("invisible", !open);
+    menu.classList.toggle("translate-y-0", open);
+    menu.classList.toggle("-translate-y-4", !open);
+    menu.classList.toggle("opacity-100", open);
+    menu.classList.toggle("opacity-0", !open);
+    topLine.classList.toggle("rotate-45", open);
+    topLine.classList.toggle("-translate-y-[3px]", !open);
+    bottomLine.classList.toggle("-rotate-45", open);
+    bottomLine.classList.toggle("translate-y-[3px]", !open);
+    document.body.style.overflow = open ? "hidden" : "";
+    if (restoreFocus) requestAnimationFrame(() => menuToggle.focus());
+  };
+
+  menuToggle?.addEventListener("click", () => setMenuOpen(!menuOpen));
+  header
+    ?.querySelectorAll<HTMLAnchorElement>("[data-mobile-link]")
+    .forEach((link) => link.addEventListener("click", () => setMenuOpen(false)));
+  window.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && menuOpen) setMenuOpen(false, true);
+  });
+  window
+    .matchMedia("(min-width: 901px)")
+    .addEventListener("change", (event) => {
+      if (event.matches && menuOpen) setMenuOpen(false);
+    });
+
+  const applyThemeControl = (theme: "light" | "dark") => {
+    if (!themeToggle || !themeLabel || !themeIndicator) return;
+    const isLight = theme === "light";
+    themeLabel.textContent = isLight ? "Dark" : "Light";
+    themeToggle.setAttribute(
+      "aria-label",
+      `Switch to ${isLight ? "dark" : "light"} mode`,
+    );
+    themeToggle.setAttribute("aria-pressed", String(isLight));
+    themeIndicator.classList.toggle("inset-[3px]", isLight);
+    themeIndicator.classList.toggle("inset-y-0.5", !isLight);
+    themeIndicator.classList.toggle("right-0.5", !isLight);
+    themeIndicator.classList.toggle("left-2", !isLight);
+  };
+
+  applyThemeControl(
+    document.documentElement.dataset.theme === "light" ? "light" : "dark",
+  );
+  themeToggle?.addEventListener("click", () => {
+    const nextTheme =
+      document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+    document.documentElement.dataset.theme = nextTheme;
+    applyThemeControl(nextTheme);
+    try {
+      localStorage.setItem("portfolio-theme", nextTheme);
+    } catch {}
+    document
+      .querySelector('meta[name="theme-color"]')
+      ?.setAttribute("content", nextTheme === "light" ? "#f2f1ed" : "#080808");
+  });
+
+  const navLinks = Array.from(
+    header?.querySelectorAll<HTMLAnchorElement>("[data-nav-link]") ?? [],
+  );
+  const sections = navLinks
+    .map((link) => document.querySelector(link.hash))
+    .filter((section): section is Element => section !== null);
+  const activeObserver = new IntersectionObserver(
+    (entries) => {
+      const visible = entries
+        .filter((entry) => entry.isIntersecting)
+        .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+      if (!visible) return;
+      navLinks.forEach((link) => {
+        if (link.hash === `#${visible.target.id}`) {
+          link.setAttribute("aria-current", "page");
+        } else {
+          link.removeAttribute("aria-current");
+        }
+      });
+    },
+    { rootMargin: "-30% 0px -60%", threshold: [0, 0.25, 0.5] },
+  );
+  sections.forEach((section) => activeObserver.observe(section));
+</script>

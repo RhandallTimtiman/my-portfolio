@@ -1,0 +1,404 @@
+---
+import Hero from "../components/Hero.astro";
+import Metrics from "../components/Metrics.astro";
+import Navigation from "../components/Navigation.astro";
+import Timeline from "../components/Timeline.astro";
+import {
+  experience,
+  metrics,
+  navigation,
+  profile,
+  projects,
+  skillGroups,
+  socialLinks,
+} from "../data/portfolio";
+import Layout from "../layouts/Layout.astro";
+
+const title = "Rhandall Timtiman — Senior Flutter & Full Stack Developer";
+const description =
+  "Portfolio of Rhandall Timtiman, a senior Flutter and full-stack developer building mobile apps, real-time systems, and scalable backend services.";
+const container =
+  "mx-auto w-[min(calc(100%_-_1.25rem),1280px)] sm:w-[min(calc(100%_-_2rem),1280px)]";
+const section =
+  "scroll-mt-[72px] border-t border-black/15 py-[clamp(6rem,12vw,10rem)] dark:border-white/15";
+const viewportReveal =
+  "transition-transform duration-700 ease-[cubic-bezier(.22,1,.36,1)] motion-reduce:transform-none motion-reduce:transition-none";
+const sectionLabel =
+  "flex items-baseline gap-4 font-mono text-[0.68rem] font-medium uppercase tracking-[0.12em] text-[#666]";
+const largeHeading =
+  "m-0 max-w-[18ch] text-[clamp(2.6rem,6vw,5.8rem)] leading-[0.98] font-medium tracking-[-0.06em]";
+const compactHeading =
+  "m-0 max-w-[18ch] text-[clamp(2.8rem,5vw,4.8rem)] leading-[0.98] font-medium tracking-[-0.06em]";
+const tag =
+  "border border-[#aaa9a3] px-2.5 py-2 font-mono text-[0.62rem] font-medium tracking-[0.04em] text-[#4d4d4d] dark:border-[#333] dark:text-[#aaa]";
+const caseHeading =
+  "mb-3 font-mono text-[0.64rem] font-semibold uppercase tracking-[0.1em] text-[#666] dark:text-[#767676]";
+---
+
+<Layout {title} {description}>
+  <a
+    class="fixed top-4 left-4 z-[100] -translate-y-[200%] bg-[#111] px-4 py-3 text-[#f2f1ed] outline-offset-4 transition-transform focus:translate-y-0 dark:bg-white dark:text-black"
+    href="#main">Skip to content</a
+  >
+  <div class="relative isolate">
+    <div
+      class="pointer-events-none fixed inset-0 -z-10 bg-[linear-gradient(rgba(17,17,17,0.045)_1px,transparent_1px),linear-gradient(90deg,rgba(17,17,17,0.045)_1px,transparent_1px)] bg-[length:80px_80px] [mask-image:linear-gradient(to_bottom,#000_0%,transparent_45%)] dark:bg-[linear-gradient(rgba(255,255,255,0.035)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.035)_1px,transparent_1px)]"
+      aria-hidden="true"
+    >
+    </div>
+    <Navigation
+      name={profile.name}
+      specialty={profile.specialty}
+      links={navigation}
+    />
+    <main id="main">
+      <Hero {profile} />
+
+      <section
+        class={`${section} ${viewportReveal}`}
+        id="about"
+        aria-labelledby="about-title"
+        data-reveal
+      >
+        <div
+          class={`${container} grid gap-8 min-[901px]:grid-cols-[minmax(160px,.55fr)_1.45fr] min-[901px]:gap-16`}
+        >
+          <div class={sectionLabel}>
+            <span class="text-[#111] dark:text-[#f5f5f5]">01</span><p
+              class="m-0"
+            >
+              About
+            </p>
+          </div>
+          <div>
+            <h2 class={largeHeading} id="about-title">
+              Engineering across the entire product system.
+            </h2>
+            <div
+              class="mt-10 grid max-w-[900px] gap-8 leading-7 text-[#4d4d4d] min-[621px]:grid-cols-2 min-[901px]:mt-16 dark:text-[#a6a6a6]"
+            >
+              <p class="m-0">
+                I’m {profile.name}, a senior Flutter and full-stack developer
+                with more than six years of experience building production
+                software across mobile, web, APIs, and real-time systems.
+              </p>
+              <p class="m-0">
+                I lead cross-platform delivery, integrate complex third-party
+                services, and mentor development teams. I graduated Magna Cum
+                Laude in Information Technology from STI College Tanay with a
+                1.27 GPA.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section
+        class={`pb-[clamp(6rem,10vw,9rem)] ${viewportReveal}`}
+        aria-label="Career metrics"
+        data-reveal
+      >
+        <div class={container}><Metrics {metrics} /></div>
+      </section>
+
+      <section
+        class={`${section} ${viewportReveal}`}
+        id="projects"
+        aria-labelledby="projects-title"
+        data-reveal
+      >
+        <div class={container}>
+          <div
+            class="mb-[clamp(4rem,8vw,7rem)] grid gap-8 min-[901px]:grid-cols-[minmax(160px,.55fr)_1.45fr] min-[901px]:gap-16"
+          >
+            <div class={sectionLabel}>
+              <span class="text-[#111] dark:text-[#f5f5f5]">02</span><p
+                class="m-0"
+              >
+                Selected work
+              </p>
+            </div>
+            <div>
+              <h2 class={largeHeading} id="projects-title">
+                Built around the problem,<br />not the buzzwords.
+              </h2><p
+                class="mt-8 max-w-[52ch] leading-7 text-[#4d4d4d] dark:text-[#888]"
+              >
+                Selected systems across medicine delivery, telemedicine, and
+                port operations.
+              </p>
+            </div>
+          </div>
+          <div class="border-t border-black/15 dark:border-white/15">
+            {
+              projects.map((project) => (
+                <article class="group relative border-b border-black/15 py-8 transition-[padding] duration-300 hover:px-4 dark:border-white/15">
+                  <div class="absolute inset-x-0 inset-y-0 -z-10 bg-[#e4e3de] opacity-0 transition-opacity duration-300 group-hover:opacity-100 min-[621px]:inset-x-[-1rem] dark:bg-[#101010]" />
+                  <div class="flex items-center justify-between gap-8 font-mono text-[0.65rem] font-medium uppercase tracking-[0.08em] text-[#666] dark:text-[#747474]">
+                    <>
+                      <span>
+                        {project.index} / 0{projects.length}
+                      </span>
+                      <p class="m-0">{project.role}</p>
+                    </>
+                  </div>
+                  <div class="my-8 flex items-center justify-between sm:my-12">
+                    <>
+                      <h3 class="m-0 text-[clamp(2.2rem,5vw,4.6rem)] font-medium tracking-[-0.055em]">
+                        {project.name}
+                      </h3>
+                      <span
+                        class="text-3xl text-[#666] transition-all duration-300 group-hover:translate-x-1 group-hover:-translate-y-1 group-hover:text-[#111] dark:text-[#777] dark:group-hover:text-white"
+                        aria-hidden="true"
+                      >
+                        ↗
+                      </span>
+                    </>
+                  </div>
+                  <p class="max-w-[66ch] text-[1.05rem] leading-7 text-[#4d4d4d] dark:text-[#aaa]">
+                    {project.description}
+                  </p>
+                  <div class="my-12 grid gap-6 min-[901px]:grid-cols-3 min-[901px]:gap-10">
+                    <div>
+                      <>
+                        <h4 class={caseHeading}>Problem</h4>
+                        <p class="m-0 text-sm leading-6 text-[#4d4d4d] dark:text-[#989898]">
+                          {project.problem}
+                        </p>
+                      </>
+                    </div>
+                    <div>
+                      <>
+                        <h4 class={caseHeading}>Engineering approach</h4>
+                        <p class="m-0 text-sm leading-6 text-[#4d4d4d] dark:text-[#989898]">
+                          {project.approach}
+                        </p>
+                      </>
+                    </div>
+                    <div>
+                      <>
+                        <h4 class={caseHeading}>Impact</h4>
+                        <p class="m-0 text-sm leading-6 text-[#4d4d4d] dark:text-[#989898]">
+                          {project.impact}
+                        </p>
+                      </>
+                    </div>
+                  </div>
+                  <div class="flex flex-col items-start justify-between gap-6 font-mono text-[0.65rem] font-medium uppercase tracking-[0.08em] min-[621px]:flex-row min-[621px]:items-center">
+                    <ul
+                      class="m-0 flex list-none flex-wrap gap-2 p-0"
+                      aria-label="Technologies"
+                    >
+                      {project.technologies.map((technology) => (
+                        <li class={tag}>{technology}</li>
+                      ))}
+                    </ul>
+                    {project.projectUrl ? (
+                      <a
+                        class="group/link inline-flex min-h-11 shrink-0 items-center gap-3 border border-[#111] bg-[#111] px-4 py-3 text-[#f2f1ed] no-underline outline-offset-4 transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#333] focus-visible:outline-2 motion-reduce:transform-none motion-reduce:transition-none dark:border-white dark:bg-white dark:text-[#111] dark:hover:bg-[#d9d9d9]"
+                        href={project.projectUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        View Project
+                        <span
+                          class="transition-transform duration-300 group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 motion-reduce:transform-none motion-reduce:transition-none"
+                          aria-hidden="true"
+                        >
+                          ↗
+                        </span>
+                        <span class="sr-only"> (opens in a new tab)</span>
+                      </a>
+                    ) : (
+                      <span
+                        class="inline-flex min-h-11 shrink-0 cursor-not-allowed items-center border border-dashed border-[#aaa9a3] px-4 py-3 text-[#777] dark:border-[#444] dark:text-[#777]"
+                        aria-disabled="true"
+                      >
+                        Project Link Pending
+                      </span>
+                    )}
+                  </div>
+                </article>
+              ))
+            }
+          </div>
+        </div>
+      </section>
+
+      <section
+        class={`${section} ${viewportReveal} bg-[#e9e8e3] dark:bg-[#0b0b0b]`}
+        id="experience"
+        aria-labelledby="experience-title"
+        data-reveal
+      >
+        <div class={container}>
+          <div
+            class="mb-[clamp(4rem,8vw,7rem)] grid gap-8 min-[901px]:grid-cols-[minmax(160px,.55fr)_1.45fr] min-[901px]:gap-16"
+          >
+            <div class={sectionLabel}>
+              <span class="text-[#111] dark:text-[#f5f5f5]">03</span><p
+                class="m-0"
+              >
+                Experience
+              </p>
+            </div>
+            <div>
+              <h2 class={compactHeading} id="experience-title">
+                A record of ownership.
+              </h2><p
+                class="mt-8 max-w-[52ch] leading-7 text-[#4d4d4d] dark:text-[#888]"
+              >
+                Progressive responsibility from frontend modernization to mobile
+                leadership and full-stack system design.
+              </p>
+            </div>
+          </div>
+          <Timeline items={experience} />
+        </div>
+      </section>
+
+      <section
+        class={`${section} ${viewportReveal}`}
+        id="skills"
+        aria-labelledby="skills-title"
+        data-reveal
+      >
+        <div class={container}>
+          <div
+            class="mb-[clamp(4rem,8vw,7rem)] grid gap-8 min-[901px]:grid-cols-[minmax(160px,.55fr)_1.45fr] min-[901px]:gap-16"
+          >
+            <div class={sectionLabel}>
+              <span class="text-[#111] dark:text-[#f5f5f5]">04</span><p
+                class="m-0"
+              >
+                Capabilities
+              </p>
+            </div>
+            <div>
+              <h2 class={compactHeading} id="skills-title">
+                Tools follow the work.
+              </h2><p
+                class="mt-8 max-w-[52ch] leading-7 text-[#4d4d4d] dark:text-[#888]"
+              >
+                A production stack spanning cross-platform clients, APIs, data,
+                messaging, and delivery.
+              </p>
+            </div>
+          </div>
+          <div class="border-t border-black/15 dark:border-white/15">
+            {
+              skillGroups.map((group, index) => (
+                <div class="grid min-h-28 grid-cols-[32px_1fr] items-center gap-4 border-b border-black/15 py-6 transition-all duration-300 hover:px-4 hover:bg-[#e4e3de] min-[621px]:grid-cols-[48px_minmax(200px,.6fr)_1.4fr] min-[621px]:gap-8 dark:border-white/15 dark:hover:bg-[#0f0f0f]">
+                  <>
+                    <span class="font-mono text-[0.63rem] font-medium text-[#666]">
+                      0{index + 1}
+                    </span>
+                    <h3 class="m-0 text-lg font-medium">{group.category}</h3>
+                    <p class="col-start-2 m-0 font-mono text-[0.72rem] leading-7 font-medium tracking-[0.025em] text-[#4d4d4d] min-[621px]:col-auto dark:text-[#888]">
+                      {group.skills.join(" · ")}
+                    </p>
+                  </>
+                </div>
+              ))
+            }
+          </div>
+        </div>
+      </section>
+
+      <section
+        class={`grid min-h-[90svh] scroll-mt-[72px] items-end border-t border-black/15 py-8 pt-32 dark:border-white/15 ${viewportReveal}`}
+        id="contact"
+        aria-labelledby="contact-title"
+        data-reveal
+      >
+        <div class={container}>
+          <div
+            class="flex justify-between pb-8 font-mono text-[0.66rem] font-medium uppercase tracking-[0.1em] text-[#666]"
+          >
+            <span>05 / Contact</span><span class="hidden min-[621px]:inline"
+              >{profile.location}</span
+            >
+          </div>
+          <h2
+            class="my-4 mb-12 max-w-[13ch] text-[clamp(3.5rem,8vw,8rem)] leading-[0.92] font-medium tracking-[-0.07em]"
+            id="contact-title"
+          >
+            Have a product or engineering challenge in mind?
+          </h2>
+          <a
+            class="group flex items-center justify-between border-y border-black/15 py-6 text-[clamp(1.4rem,3vw,2.5rem)] no-underline transition-all duration-300 hover:px-4 hover:text-[#4d4d4d] dark:border-white/15 dark:hover:text-[#bcbcbc]"
+            href={`mailto:${profile.email}`}
+            >Let’s talk <span
+              class="transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1"
+              aria-hidden="true">↗</span
+            ></a
+          >
+          <div
+            class="mt-20 flex flex-wrap items-center justify-between gap-8 font-mono text-[0.63rem] leading-6 font-medium uppercase tracking-[0.06em] text-[#4d4d4d] dark:text-[#666] min-[901px]:grid min-[901px]:grid-cols-[1fr_auto_1fr]"
+          >
+            <p>© 2026 {profile.name}</p>
+            <ul
+              class="order-3 m-0 flex w-full list-none flex-wrap gap-6 p-0 min-[901px]:order-none min-[901px]:w-auto"
+              aria-label="Social links"
+            >
+              {
+                socialLinks.map((link) => (
+                  <li>
+                    <a
+                      class="text-[#4d4d4d] no-underline dark:text-[#aaa]"
+                      href={link.href}
+                      target={
+                        link.href?.startsWith("http") ? "_blank" : undefined
+                      }
+                      rel={
+                        link.href?.startsWith("http") ? "noreferrer" : undefined
+                      }
+                    >
+                      {link.label}
+                      {link.href?.startsWith("http") && (
+                        <span class="sr-only"> (opens in a new tab)</span>
+                      )}
+                    </a>
+                  </li>
+                ))
+              }
+            </ul>
+            <a
+              class="text-[#4d4d4d] no-underline min-[901px]:justify-self-end dark:text-[#aaa]"
+              href="#top">Back to top ↑</a
+            >
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      const reducedMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      ).matches;
+
+      if (!reducedMotion) {
+        const sections =
+          document.querySelectorAll<HTMLElement>("[data-reveal]");
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (!entry.isIntersecting) return;
+
+              const section = entry.target as HTMLElement;
+              section.classList.remove("translate-y-8");
+              section.classList.add("translate-y-0");
+              observer.unobserve(section);
+            });
+          },
+          { threshold: 0.12, rootMargin: "0px 0px -10% 0px" },
+        );
+
+        sections.forEach((section) => {
+          section.classList.add("translate-y-8");
+          observer.observe(section);
+        });
+      }
+    </script>
+  </div>
+</Layout>

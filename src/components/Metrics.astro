@@ -1,0 +1,65 @@
+---
+import type { Metric } from "../data/portfolio";
+
+interface Props {
+  metrics: Metric[];
+}
+
+const { metrics } = Astro.props;
+---
+
+<div
+  class="grid border-y border-black/15 min-[621px]:grid-cols-3 dark:border-white/15"
+>
+  {
+    metrics.map((metric) => (
+      <div class="flex min-h-[190px] flex-col justify-end border-b border-black/15 p-8 last:border-b-0 min-[621px]:min-h-[260px] min-[621px]:border-r min-[621px]:border-b-0 min-[621px]:last:border-r-0 dark:border-white/15">
+        <span
+          class="text-[clamp(4rem,8vw,7.5rem)] leading-[0.85] font-medium tracking-[-0.07em]"
+          data-metric-value={metric.numericValue}
+          data-metric-suffix={metric.suffix ?? ""}
+          data-metric-placeholder={String(metric.placeholder)}
+        >
+          {metric.value}
+        </span>
+        <p class="mt-8 mb-2 text-[#4d4d4d] dark:text-[#b3b3b3]">
+          {metric.label}
+        </p>
+      </div>
+    ))
+  }
+</div>
+
+<script>
+  if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    const values = document.querySelectorAll<HTMLElement>("[data-metric-value]");
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+
+          const value = entry.target as HTMLElement;
+          observer.unobserve(value);
+          if (value.dataset.metricPlaceholder === "true") return;
+          const target = Number(value.dataset.metricValue);
+          if (!Number.isFinite(target)) return;
+          const suffix = value.dataset.metricSuffix ?? "";
+          const start = performance.now();
+          const duration = 600;
+
+          const update = (now: number) => {
+            const progress = Math.min((now - start) / duration, 1);
+            const eased = 1 - Math.pow(1 - progress, 3);
+            value.textContent = `${Math.round(target * eased)}${suffix}`;
+            if (progress < 1) requestAnimationFrame(update);
+          };
+
+          requestAnimationFrame(update);
+        });
+      },
+      { threshold: 0.7 },
+    );
+
+    values.forEach((value) => observer.observe(value));
+  }
+</script>
