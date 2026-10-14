@@ -1,2 +1,5 @@
 @import "tailwindcss";
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+:root { --ink-accent: #a34225; --ink-muted: #57564f; --ink-line: #c9c7bd; }
+[data-theme="dark"] { --ink-accent: #e3a27c; --ink-muted: #aaa79e; --ink-line: #33332f; }

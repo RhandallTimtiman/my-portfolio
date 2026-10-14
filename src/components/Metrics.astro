@@ -9,11 +9,11 @@ const { metrics } = Astro.props;
 ---
 
 <div
-  class="grid border-y border-black/15 min-[621px]:grid-cols-3 dark:border-white/15"
+  class="grid border-y border-black/15 min-[621px]:grid-cols-2 dark:border-white/15"
 >
   {
     metrics.map((metric) => (
-      <div class="flex min-h-[190px] flex-col justify-end border-b border-black/15 p-8 last:border-b-0 min-[621px]:min-h-[260px] min-[621px]:border-r min-[621px]:border-b-0 min-[621px]:last:border-r-0 dark:border-white/15">
+      <div class="flex min-h-[190px] flex-col items-center justify-center border-b border-black/15 p-8 text-center last:border-b-0 min-[621px]:min-h-[260px] min-[621px]:border-r min-[621px]:border-b-0 min-[621px]:last:border-r-0 dark:border-white/15">
         <span
           class="text-[clamp(4rem,8vw,7.5rem)] leading-[0.85] font-medium tracking-[-0.07em]"
           data-metric-value={metric.numericValue}

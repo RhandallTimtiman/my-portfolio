@@ -1,0 +1,150 @@
+---
+import type { Project } from "../data/portfolio";
+interface Props { projects: Project[] }
+const { projects } = Astro.props;
+const dispatch = projects[0];
+---
+<article id="dispatch-study" class="dispatch-study" aria-labelledby="dispatch-title">
+  <div class="study-heading">
+    <p class="note-label">Field note 01 / Medicine delivery</p>
+    <p class="note-label">{dispatch.role}</p>
+  </div>
+  <h3 id="dispatch-title">The request is only<br /><em>the beginning.</em></h3>
+  <p class="study-intro">A medicine delivery depends on more than a responsive app. The dispatch service also needs a way to handle jobs that fail.</p>
+  <div class="migration">
+    <div><span class="note-label">Starting point</span><h4>Bun + TypeScript API</h4><p>{dispatch.problem}</p></div>
+    <span class="migration-arrow" aria-hidden="true">→</span>
+    <div><span class="note-label">The change I made</span><h4>.NET + Redis-backed queuing</h4><p>{dispatch.approach}</p></div>
+  </div>
+  <figure class="dispatch-figure">
+    <figcaption><span class="note-label">Follow a delivery job</span><span>Simplified illustration of queue and retry behavior</span></figcaption>
+    <ol class="job-path" aria-label="Illustrative dispatch stages">
+      <li data-stage="0"><small>01 / Client</small><strong>Flutter app</strong><span>Delivery request</span></li>
+      <li data-stage="1"><small>02 / Service</small><strong>.NET API</strong><span>Dispatch endpoint</span></li>
+      <li data-stage="2"><small>03 / Queue</small><strong>Redis</strong><span>Queued work</span></li>
+      <li data-stage="3"><small>04 / Processing</small><strong>Delivery job</strong><span>Attempt → retry if needed</span></li>
+    </ol>
+    <div class="trace-controls" hidden>
+      <button type="button" data-run="success">Trace a successful job <span aria-hidden="true">↗</span></button>
+      <button type="button" data-run="retry">Trace a retry <span aria-hidden="true">↻</span></button>
+    </div>
+    <p class="trace-status" role="status" aria-live="polite" aria-atomic="true">The API, queue, and processing stages each have a part in handling the delivery job.</p>
+  </figure>
+  <div class="study-outcome">
+    <div><p class="note-label">What changed</p><p>{dispatch.impact}</p></div>
+    <div><p class="note-label">The engineering detail</p><p>The migration paired a runtime change with explicit retry handling. Both are part of the story: how quickly work enters the system, and how failed operations are handled.</p></div>
+  </div>
+  {dispatch.projectUrl && <a class="study-link" href={dispatch.projectUrl} target="_blank" rel="noreferrer">See the rider app on Google Play ↗<span class="sr-only"> (opens in a new tab)</span></a>}
+</article>
+<div class="other-work">
+  <p class="note-label">More from the field / 02–06</p>
+  {projects.slice(1).map((project) => (
+    <article id={`project-${project.index}`} data-project class="work-note">
+      <div class="work-number">{project.index}</div>
+      <div>
+        <p class="note-label">{project.role}</p>
+        <h3>{project.name}</h3>
+        <p class="work-description">{project.description}</p>
+        <details>
+          <summary>Read the engineering notes <span aria-hidden="true">+</span></summary>
+          <div class="work-details">
+            <div><h4>The constraint</h4><p>{project.problem}</p></div>
+            <div><h4>My contribution</h4><p>{project.approach}</p></div>
+            <div><h4>The outcome</h4><p>{project.impact}</p></div>
+          </div>
+        </details>
+        <div class="work-footer"><p>{project.technologies.join(" / ")}</p>{project.projectUrl && <a href={project.projectUrl} target="_blank" rel="noreferrer">View app ↗<span class="sr-only"> (opens in a new tab)</span></a>}</div>
+      </div>
+    </article>
+  ))}
+</div>
+<script>
+  const figure = document.querySelector<HTMLElement>(".dispatch-figure");
+  if (figure) {
+    const controls = figure.querySelector<HTMLElement>(".trace-controls");
+    const status = figure.querySelector<HTMLElement>(".trace-status");
+    const stages = Array.from(figure.querySelectorAll<HTMLElement>("[data-stage]"));
+    const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    let running: "success" | "retry" = "success";
+    const finish = () => {
+      clearTimeout(timer);
+      stages.forEach((stage) => stage.removeAttribute("data-current"));
+      if (status) status.textContent = running === "retry"
+        ? "Illustration complete: the first attempt failed; an explicit retry allowed a later attempt to complete."
+        : "Illustration complete: the request passed through the API and queue, then completed on its first processing attempt.";
+    };
+    if (controls) controls.hidden = false;
+    figure.querySelectorAll<HTMLButtonElement>("[data-run]").forEach((button) => {
+      button.addEventListener("click", () => {
+        clearTimeout(timer);
+        running = button.dataset.run === "retry" ? "retry" : "success";
+        if (preference.matches) { finish(); return; }
+        const steps = running === "retry" ? [0, 1, 2, 3, 2, 3] : [0, 1, 2, 3];
+        let index = 0;
+        if (status) status.textContent = running === "retry" ? "Tracing an illustrative failed attempt and retry…" : "Tracing an illustrative successful job…";
+        const advance = () => {
+          stages.forEach((stage, stageIndex) => stage.toggleAttribute("data-current", stageIndex === steps[index]));
+          index++;
+          timer = setTimeout(index < steps.length ? advance : finish, 650);
+        };
+        advance();
+      });
+    });
+    preference.addEventListener("change", () => { if (preference.matches && timer) finish(); });
+    window.addEventListener("pagehide", () => clearTimeout(timer));
+  }
+</script>
+<style>
+  .dispatch-study,.work-note { scroll-margin-top:100px; }
+  .dispatch-study { border-top:2px solid var(--ink-accent); padding-top:24px; }
+  .note-label,.work-number,.work-footer { font: .68rem/1.7 monospace; text-transform:uppercase; letter-spacing:.07em; color:var(--ink-muted); }
+  .study-heading { display:flex; justify-content:space-between; gap:24px; }
+  .dispatch-study > h3 { font-size:clamp(2.8rem,6vw,5.5rem); letter-spacing:-.055em; line-height:1.05; font-weight:500; margin:40px 0 24px; }
+  em { font-family:Georgia,serif; color:var(--ink-accent); font-weight:400; }
+  .study-intro { max-width:55ch; font-size:1.2rem; line-height:1.7; color:var(--ink-muted); }
+  .migration { display:grid; grid-template-columns:1fr 60px 1fr; gap:24px; margin:48px 0; }
+  h4 { font-weight:500; font-size:1.15rem; margin:12px 0; }
+  .migration p,.study-outcome p:not(.note-label),.work-details p { line-height:1.8; color:var(--ink-muted); font-size:.95rem; }
+  .migration-arrow { align-self:center; font-size:2rem; color:var(--ink-accent); }
+  .dispatch-figure { margin:40px 0; padding:32px; border:1px solid var(--ink-line); background:color-mix(in srgb, var(--ink-accent) 4%, transparent); }
+  figcaption { display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+  figcaption > span:last-child { font-size:.75rem; color:var(--ink-muted); }
+  .job-path { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:24px; list-style:none; padding:0; margin:36px 0; }
+  .job-path li { position:relative; padding:20px 14px; border:1px solid var(--ink-line); transition:background 200ms,border-color 200ms; }
+  .job-path li:not(:last-child)::after { content:'→'; position:absolute; right:-20px; top:45%; color:var(--ink-accent); }
+  .job-path small,.job-path strong,.job-path span { display:block; }
+  .job-path small { font: .6rem monospace; text-transform:uppercase; color:var(--ink-muted); }
+  .job-path strong { font-size:1.1rem; margin:16px 0 8px; font-weight:500; }
+  .job-path span { font-size:.72rem; color:var(--ink-muted); }
+  .job-path [data-current] { border-color:var(--ink-accent); background:color-mix(in srgb,var(--ink-accent) 18%,transparent); }
+  .trace-controls { display:flex; gap:12px; flex-wrap:wrap; }
+  .trace-controls[hidden] { display:none; }
+  button { font: .75rem monospace; min-height:44px; padding:10px 16px; border:1px solid var(--ink-accent); background:transparent; cursor:pointer; color:inherit; }
+  button:hover { background:color-mix(in srgb,var(--ink-accent) 12%,transparent); }
+  button:focus-visible,summary:focus-visible,a:focus-visible { outline:2px solid var(--ink-accent); outline-offset:5px; }
+  .trace-status { min-height:3em; font:.75rem/1.7 monospace; color:var(--ink-muted); margin:20px 0 0; }
+  .study-outcome { display:grid; grid-template-columns:1fr 1fr; gap:48px; }
+  .study-link { display:inline-block; margin:20px 0 48px; text-underline-offset:6px; }
+  .other-work { border-top:1px solid var(--ink-line); margin-top:48px; }
+  .other-work > p { padding:24px 0; }
+  .work-note { display:grid; grid-template-columns:64px 1fr; gap:24px; padding:36px 0; border-bottom:1px solid var(--ink-line); }
+  .work-number { padding-top:12px; color:var(--ink-accent); }
+  .work-note h3 { margin:12px 0; font-size:clamp(1.7rem,3vw,2.8rem); font-weight:500; letter-spacing:-.035em; }
+  .work-description { max-width:65ch; line-height:1.8; color:var(--ink-muted); }
+  summary { cursor:pointer; padding:16px 0; font-size:.85rem; }
+  summary span { margin-left:16px; color:var(--ink-accent); }
+  details[open] summary span { display:none; }
+  .work-details { display:grid; grid-template-columns:repeat(3,1fr); gap:32px; }
+  .work-footer { display:flex; justify-content:space-between; flex-wrap:wrap; gap:16px; align-items:center; margin-top:16px; }
+  @media(max-width:700px) {
+    .study-heading { flex-direction:column; gap:0; }
+    .migration,.study-outcome,.work-details { grid-template-columns:1fr; gap:20px; }
+    .migration-arrow { transform:rotate(90deg); justify-self:start; }
+    .dispatch-figure { padding:20px 16px; }
+    .job-path { grid-template-columns:1fr; gap:24px; }
+    .job-path li:not(:last-child)::after { content:'↓'; right:50%; top:auto; bottom:-23px; }
+    .work-note { grid-template-columns:28px 1fr; gap:12px; }
+  }
+  @media(prefers-reduced-motion:reduce) { .job-path li { transition:none; } }
+</style>

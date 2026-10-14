@@ -80,12 +80,6 @@ export const metrics: Metric[] = [
     placeholder: false,
   },
   { value: "4", numericValue: 4, label: "Product domains", placeholder: false },
-  {
-    value: "12",
-    numericValue: 12,
-    label: "Projects Shipped",
-    placeholder: false,
-  },
 ];
 
 export const projects: Project[] = [

@@ -1,4 +1,7 @@
 ---
+import WorkStudies from "../components/WorkStudies.astro";
+import Contributions from "../components/Contributions.astro";
+import PageMotion from "../components/PageMotion.astro";
 import Hero from "../components/Hero.astro";
 import Metrics from "../components/Metrics.astro";
 import Navigation from "../components/Navigation.astro";
@@ -29,10 +32,6 @@ const largeHeading =
   "m-0 max-w-[18ch] text-[clamp(2.6rem,6vw,5.8rem)] leading-[0.98] font-medium tracking-[-0.06em]";
 const compactHeading =
   "m-0 max-w-[18ch] text-[clamp(2.8rem,5vw,4.8rem)] leading-[0.98] font-medium tracking-[-0.06em]";
-const tag =
-  "border border-[#aaa9a3] px-2.5 py-2 font-mono text-[0.62rem] font-medium tracking-[0.04em] text-[#4d4d4d] dark:border-[#333] dark:text-[#aaa]";
-const caseHeading =
-  "mb-3 font-mono text-[0.64rem] font-semibold uppercase tracking-[0.1em] text-[#666] dark:text-[#767676]";
 ---
 
 <Layout {title} {description}>
@@ -53,6 +52,7 @@ const caseHeading =
     />
     <main id="main">
       <Hero {profile} />
+      <Contributions />
 
       <section
         class={`${section} ${viewportReveal}`}
@@ -72,7 +72,7 @@ const caseHeading =
           </div>
           <div>
             <h2 class={largeHeading} id="about-title">
-              Engineering across the entire product system.
+              From the mobile screen to the service behind it.
             </h2>
             <div
               class="mt-10 grid max-w-[900px] gap-8 leading-7 text-[#4d4d4d] min-[621px]:grid-cols-2 min-[901px]:mt-16 dark:text-[#a6a6a6]"
@@ -120,7 +120,7 @@ const caseHeading =
             </div>
             <div>
               <h2 class={largeHeading} id="projects-title">
-                Built around the problem,<br />not the buzzwords.
+                A closer look at<br />the work.
               </h2><p
                 class="mt-8 max-w-[52ch] leading-7 text-[#4d4d4d] dark:text-[#888]"
               >
@@ -129,99 +129,7 @@ const caseHeading =
               </p>
             </div>
           </div>
-          <div class="border-t border-black/15 dark:border-white/15">
-            {
-              projects.map((project) => (
-                <article class="group relative border-b border-black/15 py-8 transition-[padding] duration-300 hover:px-4 dark:border-white/15">
-                  <div class="absolute inset-x-0 inset-y-0 -z-10 bg-[#e4e3de] opacity-0 transition-opacity duration-300 group-hover:opacity-100 min-[621px]:inset-x-[-1rem] dark:bg-[#101010]" />
-                  <div class="flex items-center justify-between gap-8 font-mono text-[0.65rem] font-medium uppercase tracking-[0.08em] text-[#666] dark:text-[#747474]">
-                    <>
-                      <span>
-                        {project.index} / 0{projects.length}
-                      </span>
-                      <p class="m-0">{project.role}</p>
-                    </>
-                  </div>
-                  <div class="my-8 flex items-center justify-between sm:my-12">
-                    <>
-                      <h3 class="m-0 text-[clamp(2.2rem,5vw,4.6rem)] font-medium tracking-[-0.055em]">
-                        {project.name}
-                      </h3>
-                      <span
-                        class="text-3xl text-[#666] transition-all duration-300 group-hover:translate-x-1 group-hover:-translate-y-1 group-hover:text-[#111] dark:text-[#777] dark:group-hover:text-white"
-                        aria-hidden="true"
-                      >
-                        ↗
-                      </span>
-                    </>
-                  </div>
-                  <p class="max-w-[66ch] text-[1.05rem] leading-7 text-[#4d4d4d] dark:text-[#aaa]">
-                    {project.description}
-                  </p>
-                  <div class="my-12 grid gap-6 min-[901px]:grid-cols-3 min-[901px]:gap-10">
-                    <div>
-                      <>
-                        <h4 class={caseHeading}>Problem</h4>
-                        <p class="m-0 text-sm leading-6 text-[#4d4d4d] dark:text-[#989898]">
-                          {project.problem}
-                        </p>
-                      </>
-                    </div>
-                    <div>
-                      <>
-                        <h4 class={caseHeading}>Engineering approach</h4>
-                        <p class="m-0 text-sm leading-6 text-[#4d4d4d] dark:text-[#989898]">
-                          {project.approach}
-                        </p>
-                      </>
-                    </div>
-                    <div>
-                      <>
-                        <h4 class={caseHeading}>Impact</h4>
-                        <p class="m-0 text-sm leading-6 text-[#4d4d4d] dark:text-[#989898]">
-                          {project.impact}
-                        </p>
-                      </>
-                    </div>
-                  </div>
-                  <div class="flex flex-col items-start justify-between gap-6 font-mono text-[0.65rem] font-medium uppercase tracking-[0.08em] min-[621px]:flex-row min-[621px]:items-center">
-                    <ul
-                      class="m-0 flex list-none flex-wrap gap-2 p-0"
-                      aria-label="Technologies"
-                    >
-                      {project.technologies.map((technology) => (
-                        <li class={tag}>{technology}</li>
-                      ))}
-                    </ul>
-                    {project.projectUrl ? (
-                      <a
-                        class="group/link inline-flex min-h-11 shrink-0 items-center gap-3 border border-[#111] bg-[#111] px-4 py-3 text-[#f2f1ed] no-underline outline-offset-4 transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#333] focus-visible:outline-2 motion-reduce:transform-none motion-reduce:transition-none dark:border-white dark:bg-white dark:text-[#111] dark:hover:bg-[#d9d9d9]"
-                        href={project.projectUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        View Project
-                        <span
-                          class="transition-transform duration-300 group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 motion-reduce:transform-none motion-reduce:transition-none"
-                          aria-hidden="true"
-                        >
-                          ↗
-                        </span>
-                        <span class="sr-only"> (opens in a new tab)</span>
-                      </a>
-                    ) : (
-                      <span
-                        class="inline-flex min-h-11 shrink-0 cursor-not-allowed items-center border border-dashed border-[#aaa9a3] px-4 py-3 text-[#777] dark:border-[#444] dark:text-[#777]"
-                        aria-disabled="true"
-                      >
-                        Project Link Pending
-                      </span>
-                    )}
-                  </div>
-                </article>
-              ))
-            }
-          </div>
+          <WorkStudies {projects} />
         </div>
       </section>
 
@@ -288,7 +196,7 @@ const caseHeading =
           <div class="border-t border-black/15 dark:border-white/15">
             {
               skillGroups.map((group, index) => (
-                <div class="grid min-h-28 grid-cols-[32px_1fr] items-center gap-4 border-b border-black/15 py-6 transition-all duration-300 hover:px-4 hover:bg-[#e4e3de] min-[621px]:grid-cols-[48px_minmax(200px,.6fr)_1.4fr] min-[621px]:gap-8 dark:border-white/15 dark:hover:bg-[#0f0f0f]">
+                <div data-skill class="grid min-h-28 grid-cols-[32px_1fr] items-center gap-4 border-b border-black/15 py-6 transition-all duration-300 hover:px-4 hover:bg-[#e4e3de] min-[621px]:grid-cols-[48px_minmax(200px,.6fr)_1.4fr] min-[621px]:gap-8 dark:border-white/15 dark:hover:bg-[#0f0f0f]">
                   <>
                     <span class="font-mono text-[0.63rem] font-medium text-[#666]">
                       0{index + 1}
@@ -323,16 +231,22 @@ const caseHeading =
             class="my-4 mb-12 max-w-[13ch] text-[clamp(3.5rem,8vw,8rem)] leading-[0.92] font-medium tracking-[-0.07em]"
             id="contact-title"
           >
-            Have a product or engineering challenge in mind?
+            Let’s discuss your team’s next engineering challenge.
           </h2>
           <a
             class="group flex items-center justify-between border-y border-black/15 py-6 text-[clamp(1.4rem,3vw,2.5rem)] no-underline transition-all duration-300 hover:px-4 hover:text-[#4d4d4d] dark:border-white/15 dark:hover:text-[#bcbcbc]"
             href={`mailto:${profile.email}`}
-            >Let’s talk <span
+            >Email me <span
               class="transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1"
               aria-hidden="true">↗</span
             ></a
           >
+          <p class="mt-6 break-words font-mono text-sm text-[#4d4d4d] dark:text-[#aaa]">
+            <a class="underline underline-offset-4" href={`mailto:${profile.email}`}>{profile.email}</a>
+          </p>
+          <p class="max-w-[60ch] text-sm leading-7 text-[#4d4d4d] dark:text-[#aaa]">
+            For a role discussion, include the team, role, and the mobile or backend problems you’re working on.
+          </p>
           <div
             class="mt-20 flex flex-wrap items-center justify-between gap-8 font-mono text-[0.63rem] leading-6 font-medium uppercase tracking-[0.06em] text-[#4d4d4d] dark:text-[#666] min-[901px]:grid min-[901px]:grid-cols-[1fr_auto_1fr]"
           >
@@ -372,33 +286,6 @@ const caseHeading =
       </section>
     </main>
 
-    <script>
-      const reducedMotion = window.matchMedia(
-        "(prefers-reduced-motion: reduce)",
-      ).matches;
-
-      if (!reducedMotion) {
-        const sections =
-          document.querySelectorAll<HTMLElement>("[data-reveal]");
-        const observer = new IntersectionObserver(
-          (entries) => {
-            entries.forEach((entry) => {
-              if (!entry.isIntersecting) return;
-
-              const section = entry.target as HTMLElement;
-              section.classList.remove("translate-y-8");
-              section.classList.add("translate-y-0");
-              observer.unobserve(section);
-            });
-          },
-          { threshold: 0.12, rootMargin: "0px 0px -10% 0px" },
-        );
-
-        sections.forEach((section) => {
-          section.classList.add("translate-y-8");
-          observer.observe(section);
-        });
-      }
-    </script>
+    <PageMotion />
   </div>
 </Layout>

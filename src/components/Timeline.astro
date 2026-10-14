@@ -20,15 +20,24 @@ const tagClass =
   </div>
   {
     items.map((item, index) => (
-      <article class="relative grid grid-cols-[48px_1fr] gap-4 border-b border-black/15 py-14 min-[901px]:grid-cols-[48px_minmax(180px,.45fr)_1.55fr] min-[901px]:gap-8 dark:border-white/15">
-        <div class="relative z-10 grid place-items-start">
-          <span class="grid size-12 place-items-center rounded-full border border-[#aaa9a3] bg-[#e9e8e3] font-mono text-[0.63rem] font-medium text-[#666] dark:border-[#343434] dark:bg-[#0b0b0b] dark:text-[#888]">
+      <article
+        data-experience-item
+        class="relative grid grid-cols-[48px_1fr] gap-4 border-b border-black/15 py-14 min-[901px]:grid-cols-[48px_minmax(180px,.45fr)_1.55fr] min-[901px]:gap-8 dark:border-white/15"
+      >
+        <div class="relative z-10 row-span-2 min-[901px]:row-span-1">
+          <span
+            data-experience-marker
+            class="sticky top-24 grid size-12 place-items-center rounded-full border border-[#aaa9a3] bg-[#e9e8e3] font-mono text-[0.63rem] font-medium text-[#666] dark:border-[#343434] dark:bg-[#0b0b0b] dark:text-[#888]"
+          >
             0{index + 1}
           </span>
         </div>
-        <div class="col-start-2 font-mono text-[0.68rem] leading-6 font-medium uppercase tracking-[0.06em] text-[#666] min-[901px]:col-auto">
-          <p class="m-0 mb-2">{item.period}</p>
-          <p class="m-0">{item.company}</p>
+        <div
+          data-experience-meta
+          class="col-start-2 self-start font-mono text-[0.68rem] leading-6 font-medium uppercase tracking-[0.06em] text-[#666] min-[901px]:sticky min-[901px]:top-24 min-[901px]:col-auto"
+        >
+          <p class="m-0 mb-2 font-bold text-md">{item.period}</p>
+          <p class="m-0 font-bold text-md">{item.company}</p>
         </div>
         <div class="col-start-2 min-[901px]:col-auto">
           <h3 class="mt-0 mb-4 text-[clamp(1.8rem,3vw,2.8rem)] font-medium tracking-[-0.04em]">
@@ -41,25 +50,21 @@ const tagClass =
             <div>
               <h4 class={detailHeading}>Ownership</h4>
               <ul class="m-0 list-none p-0 text-sm leading-6 text-[#4d4d4d] dark:text-[#939393]">
-                {
-                  item.responsibilities.map((entry) => (
-                    <li class="relative mb-2 pl-4 before:absolute before:left-0 before:content-['—']">
-                      {entry}
-                    </li>
-                  ))
-                }
+                {item.responsibilities.map((entry) => (
+                  <li class="relative mb-2 pl-4 before:absolute before:left-0 before:content-['—']">
+                    {entry}
+                  </li>
+                ))}
               </ul>
             </div>
             <div>
               <h4 class={detailHeading}>Impact</h4>
               <ul class="m-0 list-none p-0 text-sm leading-6 text-[#4d4d4d] dark:text-[#939393]">
-                {
-                  item.achievements.map((entry) => (
-                    <li class="relative mb-2 pl-4 before:absolute before:left-0 before:content-['—']">
-                      {entry}
-                    </li>
-                  ))
-                }
+                {item.achievements.map((entry) => (
+                  <li class="relative mb-2 pl-4 before:absolute before:left-0 before:content-['—']">
+                    {entry}
+                  </li>
+                ))}
               </ul>
             </div>
           </div>
@@ -67,14 +72,89 @@ const tagClass =
             class="m-0 flex list-none flex-wrap gap-2 p-0"
             aria-label="Technologies"
           >
-            {
-              item.technologies.map((technology) => (
-                <li class={tagClass}>{technology}</li>
-              ))
-            }
+            {item.technologies.map((technology) => (
+              <li class={tagClass}>{technology}</li>
+            ))}
           </ul>
         </div>
       </article>
     ))
   }
 </div>
+
+<style>
+  [data-experience-marker],
+  [data-experience-meta] {
+    transition:
+      color 200ms ease,
+      background-color 200ms ease,
+      border-color 200ms ease,
+      box-shadow 200ms ease;
+  }
+
+  [data-experience-item][data-active] [data-experience-marker] {
+    background: #111;
+    border-color: #111;
+    color: #f2f1ed;
+    box-shadow: 0 0 0 5px rgb(17 17 17 / 10%);
+  }
+
+  [data-experience-item][data-active] [data-experience-meta] {
+    color: #111;
+  }
+
+  :global([data-theme="dark"])
+    [data-experience-item][data-active]
+    [data-experience-marker] {
+    background: #f5f5f5;
+    border-color: #f5f5f5;
+    color: #0b0b0b;
+    box-shadow: 0 0 0 5px rgb(255 255 255 / 12%);
+  }
+
+  :global([data-theme="dark"])
+    [data-experience-item][data-active]
+    [data-experience-meta] {
+    color: #f5f5f5;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-experience-marker],
+    [data-experience-meta] {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  const items = Array.from(
+    document.querySelectorAll<HTMLElement>("[data-experience-item]"),
+  );
+  let pending = false;
+
+  const updateActiveExperience = () => {
+    pending = false;
+    // Use one reading line so even tall roles have exactly one active marker.
+    const readingLine = Math.max(120, window.innerHeight * 0.3);
+    const active = items.find((item) => {
+      const bounds = item.getBoundingClientRect();
+      return bounds.top <= readingLine && bounds.bottom > readingLine;
+    });
+    items.forEach((item) =>
+      item.toggleAttribute("data-active", item === active),
+    );
+  };
+
+  const scheduleUpdate = () => {
+    if (pending) return;
+    pending = true;
+    requestAnimationFrame(updateActiveExperience);
+  };
+
+  window.addEventListener("scroll", scheduleUpdate, { passive: true });
+  window.addEventListener("resize", scheduleUpdate);
+  const resizeObserver = new ResizeObserver(scheduleUpdate);
+  items.forEach((item) => resizeObserver.observe(item));
+  document.fonts.ready.then(scheduleUpdate);
+  updateActiveExperience();
+</script>

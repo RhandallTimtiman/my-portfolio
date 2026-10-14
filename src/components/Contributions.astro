@@ -1,0 +1,60 @@
+---
+const contributions = [
+  {
+    area: "Mobile platform engineering",
+    title: "Connecting Flutter to native capabilities",
+    detail: "Developed a reusable MFA Flutter package, bridging Android Kotlin and iOS Swift implementations with Pigeon at Maya Bank Philippines.",
+    skills: "Flutter · Pigeon · Kotlin · Swift",
+    href: "#experience",
+    link: "Read my experience",
+  },
+  {
+    area: "Backend reliability",
+    title: "Handling the work after a request",
+    detail: "Migrated a medicine-dispatch API from Bun and TypeScript to .NET, adding Redis-backed queues and explicit retry handling for failed operations.",
+    skills: ".NET · Redis · API migration",
+    href: "#dispatch-study",
+    link: "Explore the dispatch case study",
+  },
+  {
+    area: "Technical leadership",
+    title: "Leading mobile delivery",
+    detail: "Led the Flutter mobile team and Driver App delivery at Shiptek. Mentored developers, reviewed code, and coordinated third-party integrations across subsequent senior roles.",
+    skills: "Team leadership · Code review · Integrations",
+    href: "#experience",
+    link: "See my career progression",
+  },
+];
+---
+<section id="contributions" aria-labelledby="contributions-title" data-reveal>
+  <div class="contribution-heading">
+    <p class="eyebrow">At a glance / Selected contributions</p>
+    <h2 id="contributions-title">What I bring to an engineering team.</h2>
+    <p>Hands-on work across mobile platforms, backend services, and technical leadership.</p>
+  </div>
+  <div class="contribution-grid">
+    {contributions.map((item) => (
+      <article>
+        <p class="eyebrow">{item.area}</p>
+        <h3>{item.title}</h3>
+        <p>{item.detail}</p>
+        <p class="evidence-stack">{item.skills}</p>
+        <a href={item.href}>{item.link} <span aria-hidden="true">↗</span></a>
+      </article>
+    ))}
+  </div>
+</section>
+<style>
+  section { max-width:1280px; margin:0 auto; padding:56px 16px 80px; scroll-margin-top:88px; }
+  .contribution-heading { border-top:1px solid var(--ink-line); padding-top:32px; }
+  .eyebrow { font:.68rem/1.7 monospace; text-transform:uppercase; letter-spacing:.08em; color:var(--ink-accent); }
+  h2 { max-width:24ch; font-size:clamp(2rem,4vw,3.4rem); font-weight:500; letter-spacing:-.04em; line-height:1.1; margin:20px 0; }
+  p:not(.eyebrow) { color:var(--ink-muted); line-height:1.8; font-size:.95rem; }
+  .contribution-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:32px; margin-top:36px; }
+  article { display:flex; flex-direction:column; align-items:start; border-top:2px solid var(--ink-line); padding-top:20px; }
+  h3 { font-size:1.5rem; font-weight:500; line-height:1.25; letter-spacing:-.025em; margin:12px 0; }
+  .evidence-stack { font-family:monospace; font-size:.7rem !important; }
+  a { margin-top:auto; padding-top:20px; font-size:.8rem; text-underline-offset:5px; }
+  a:focus-visible { outline:2px solid var(--ink-accent); outline-offset:5px; }
+  @media(max-width:800px) { .contribution-grid { grid-template-columns:1fr; gap:28px; } }
+</style>
